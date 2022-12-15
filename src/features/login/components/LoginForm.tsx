@@ -48,7 +48,7 @@ export const LoginForm = () => {
           />
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 pb-2">
           <Button className="w-full px-4 py-2" size="md" variant="info">
             Sign in
           </Button>
@@ -68,7 +68,7 @@ export const LoginForm = () => {
       </p>
       {session && (
         <>
-          <div>Signed in as {session?.user?.email} </div>{' '}
+          <div>Signed in as {session.user?.name} </div>
           <button onClick={() => signOut()}>Sign out</button>
         </>
       )}

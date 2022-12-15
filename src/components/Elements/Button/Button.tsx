@@ -32,7 +32,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       type = 'button',
       className = '',
       variant = 'info',
-      size = 'md',
+      size,
       isLoading = false,
       btnOutline = false,
       ...props
@@ -46,8 +46,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={clsx(
           'btn',
           variants[variant],
-          sizes[size],
           className,
+          size && sizes[size],
           isLoading && 'loading',
           btnOutline && 'btn-outline',
         )}
