@@ -16,5 +16,15 @@ export const authOptions: NextAuthOptions = {
   ],
   adapter: PrismaAdapter(prisma),
   secret: process.env.SECRET,
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      if (url === '/login') return `${baseUrl}/${url}`;
+      return `${baseUrl}/settings/profile`;
+    },
+    async session({ session, user }) {
+      session.user.id = user.id;
+      return session;
+    },
+  },
 };
 export default NextAuth(authOptions);

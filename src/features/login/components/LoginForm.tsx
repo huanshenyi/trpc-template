@@ -1,9 +1,7 @@
-import { useSession, signOut } from 'next-auth/react';
 import { Button } from '~/components/Elements';
 import { AuthLoginBtn } from '~/features/login/components';
 
 export const LoginForm = () => {
-  const { data: session } = useSession();
   return (
     <div>
       <form>
@@ -44,6 +42,7 @@ export const LoginForm = () => {
             name="password"
             id="password"
             placeholder="Your Password"
+            autoComplete="off"
             className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
           />
         </div>
@@ -66,12 +65,6 @@ export const LoginForm = () => {
         </a>
         .
       </p>
-      {session && (
-        <>
-          <div>Signed in as {session.user?.name} </div>
-          <button onClick={() => signOut()}>Sign out</button>
-        </>
-      )}
     </div>
   );
 };
