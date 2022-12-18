@@ -1,11 +1,34 @@
-import { NextPageWithLayout } from '~/pages/_app';
-import { Layout, LoginForm } from '~/features/login';
+import type { NextPage } from 'next';
 
-const LoginPage: NextPageWithLayout = () => {
+const Navbar: NextPage = () => {
   return (
-    <>
-      <LoginForm />
-      <div className="flex gap-1 justify-center">
+    <div className="navbar bg-base-100 lg:hidden sticky top-0 w-full z-50">
+      <div className="flex-none">
+        <label
+          htmlFor="my-drawer-2"
+          className="btn btn-square btn-ghost lg:hidden"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            className="inline-block w-5 h-5 stroke-current"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            ></path>
+          </svg>
+        </label>
+      </div>
+      <div className="flex-1">
+        <a className="btn btn-ghost normal-case text-xl" href="./">
+          Sarissa Blog
+        </a>
+      </div>
+      <div className="flex-none">
         <button
           data-set-theme="winter"
           className="btn btn-sm btn-ghost btn-square"
@@ -63,16 +86,8 @@ const LoginPage: NextPageWithLayout = () => {
           </svg>
         </button>
       </div>
-    </>
+    </div>
   );
 };
 
-export default LoginPage;
-
-LoginPage.getLayout = function getLayout(page) {
-  return (
-    <Layout title="login" info="">
-      {page}
-    </Layout>
-  );
-};
+export default Navbar;

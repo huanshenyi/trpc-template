@@ -6,10 +6,7 @@ export const LoginForm = () => {
     <div>
       <form>
         <div>
-          <label
-            htmlFor="email"
-            className="block mb-2 text-sm text-gray-600 dark:text-gray-200"
-          >
+          <label htmlFor="email" className="block mb-2 text-sm">
             Email Address
           </label>
           <input
@@ -23,10 +20,7 @@ export const LoginForm = () => {
 
         <div className="mt-6">
           <div className="flex justify-between mb-2">
-            <label
-              htmlFor="password"
-              className="text-sm text-gray-600 dark:text-gray-200"
-            >
+            <label htmlFor="password" className="text-sm">
               Password
             </label>
             <a
@@ -55,7 +49,7 @@ export const LoginForm = () => {
         <AuthLoginBtn />
       </form>
 
-      <p className="mt-6 text-sm text-center text-gray-400">
+      <p className="mt-6 text-sm text-center">
         Don&#x27;t have an account yet?
         <a
           href="#"
