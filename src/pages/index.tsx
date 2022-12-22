@@ -39,7 +39,7 @@ const IndexPage: NextPageWithLayout = () => {
       <p>
         If you get stuck, check <a href="https://trpc.io">the docs</a>, write a
         message in our <a href="https://trpc.io/discord">Discord-channel</a>, or
-        write a message in{' '}
+        write a message in
         <a href="https://github.com/trpc/trpc/discussions">
           GitHub Discussions
         </a>
