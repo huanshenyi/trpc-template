@@ -1,9 +1,13 @@
-import type { NextPage } from 'next';
-import { useSession, signOut } from 'next-auth/react';
+import React from 'react';
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 
-const Sidebar: NextPage = () => {
-  const { data: session } = useSession();
+interface Props {
+  image: string | undefined;
+  name: string | undefined;
+}
+
+const Sidebar: React.FC<Props> = ({ image, name }) => {
   const handelSignOut = async () => {
     await signOut({
       callbackUrl: '/login',
@@ -16,12 +20,11 @@ const Sidebar: NextPage = () => {
         <div className="w-fit p-3 lg:m-6 bg-base-100">
           <div className="avatar w-60">
             <div className="w-16 lg:w-32 rounded-full mx-auto">
-              <img src={session?.user?.image as string} />
+              <img src={image} />
             </div>
           </div>
 
-          <h1 className="text-2xl p-2 pl-4">{session?.user?.name}</h1>
-          <p className="text-sm pl-4">{session?.user.email}</p>
+          <h1 className="text-2xl p-2 pl-4">{name}</h1>
           <div className="flex gap-1 justify-center pt-4">
             <a className="btn btn-sm btn-ghost btn-square">
               <svg

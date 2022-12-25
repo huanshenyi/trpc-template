@@ -1,14 +1,19 @@
-import { ReactElement, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { themeChange } from 'theme-change';
 
 import Navbar from '~/features/settings/components/Navbar';
 import Sidebar from '~/features/settings/components/Sidebar';
 
-type LayoutProps = Required<{
-  readonly children: ReactElement;
-}>;
+type User = {
+  name: string | undefined;
+  email: string | undefined;
+  image: string | undefined;
+  id: string | undefined;
+};
 
-export const Layout = ({ children }: LayoutProps) => {
+type LayoutProps = { children: ReactNode; user: User };
+
+const Layout = ({ children, user }: LayoutProps) => {
   useEffect(() => {
     themeChange(false);
   }, []);
@@ -22,7 +27,9 @@ export const Layout = ({ children }: LayoutProps) => {
           <main className="flex-1 p-3 md:py-[35]">{children}</main>
         </div>
       </div>
-      <Sidebar />
+      <Sidebar name={user?.name} image={user?.image} />
     </div>
   );
 };
+
+export default Layout;
