@@ -1,23 +1,9 @@
-import * as z from 'zod';
 import { GetServerSideProps } from 'next';
-import NextError from 'next/error';
-import { useSession, getSession } from 'next-auth/react';
-import { inferProcedureInput } from '@trpc/server';
+import { getSession } from 'next-auth/react';
 
-import { trpc } from '~/utils/trpc';
-import { Form, InputField } from '~/components/Form';
 import { NextPageWithLayout } from '~/pages/_app';
 import Layout from '~/features/settings/components/Layout';
-import { Button } from '~/components/Elements/Button';
-import type { AppRouter } from '~/server/routers/_app';
-
-const schema = z.object({
-  name: z.string().min(1, 'Required'),
-});
-
-type createValues = {
-  name: string;
-};
+import { ProfilePage } from '~/features/settings/pages/Profile';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
@@ -34,105 +20,29 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return { props: { user: session.user } };
 };
 
-const ProfilePage: NextPageWithLayout = () => {
-  const { data: session } = useSession();
-  const utils = trpc.useContext();
-
-  const userQuery = trpc.user.byId.useQuery({ id: session?.user.id as string });
-  const fixUser = trpc.user.fixById.useMutation({
-    async onSuccess() {
-      await utils.user.byId.invalidate();
-    },
-  });
-
-  if (userQuery.error) {
-    return (
-      <NextError
-        title={userQuery.error.message}
-        statusCode={userQuery.error.data?.httpStatus ?? 500}
-      />
-    );
-  }
-  if (userQuery.status !== 'success') {
-    return <>Loading...</>;
-  }
-
-  const { data } = userQuery;
-
-  return (
-    <>
-      <div className="space-y-2 md:space-y-6">
-        <div className="card bg-base-200 shadow-xl">
-          <div className="card-body">
-            <h1 className="md:text-3xl font-extrabold">Profile</h1>
-          </div>
-        </div>
-        <div className="card bg-base-200 shadow-xl">
-          <div className="card-body">
-            <div className="flex flex-col">
-              <div className="form-control w-52">
-                <label className="cursor-pointer label">
-                  <span className="label-text font-extrabold">基本情報</span>
-                </label>
-              </div>
-            </div>
-            <div className="divider mt-0"></div>
-            <div className="overflow-x-auto">
-              <Form<createValues, typeof schema>
-                onSubmit={async (values) => {
-                  type Input = inferProcedureInput<
-                    AppRouter['user']['fixById']
-                  >;
-                  const input: Input = {
-                    id: session?.user.id as string,
-                    name: values.name,
-                  };
-                  try {
-                    await fixUser.mutateAsync(input);
-                  } catch (cause) {
-                    console.error({ cause }, 'Failed to add post');
-                  }
-                }}
-                schema={schema}
-                options={{
-                  shouldUnregister: true,
-                  defaultValues: {
-                    name: data.name as string,
-                  },
-                }}
-                className="m-auto text-center"
-              >
-                {({ register, formState }) => (
-                  <>
-                    <InputField
-                      type="text"
-                      label="場所を追加"
-                      error={formState.errors['name']}
-                      registration={register('name')}
-                      className="lg:w-3/5 m-auto"
-                    />
-                    <div>
-                      <Button
-                        isLoading={false}
-                        type="submit"
-                        className="m-auto text-center lg:w-3/5 w-full flex justify-center border-indigo-600 bg-transparent dark:bg-sky-500 dark:text-white p-4 border rounded-full tracking-wide font-semibold focus:outline-none focus:shadow-outline shadow-lg cursor-pointer transition ease-in duration-300"
-                      >
-                        Update profile
-                      </Button>
-                    </div>
-                  </>
-                )}
-              </Form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+type User = {
+  id: string;
+  name: string | null;
 };
 
-export default ProfilePage;
+interface Iprops {
+  user: User;
+}
 
-ProfilePage.getLayout = function (page) {
+const Profile: NextPageWithLayout<Iprops> = ({ user }) => {
+  if (user) {
+    return (
+      <>
+        <ProfilePage user={user} />
+      </>
+    );
+  } else {
+    return <>Loading...</>;
+  }
+};
+
+export default Profile;
+
+Profile.getLayout = function (page) {
   return <Layout user={page.props.children.props.user}>{page}</Layout>;
 };
