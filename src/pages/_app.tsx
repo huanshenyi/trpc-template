@@ -5,6 +5,7 @@ import { SessionProvider } from 'next-auth/react';
 import type { ReactElement, ReactNode } from 'react';
 import { DefaultLayout } from '~/components/DefaultLayout';
 import { trpc } from '~/utils/trpc';
+import { Notifications } from '~/components/Notifications/Notifications';
 
 import '../styles/globals.css';
 
@@ -25,6 +26,7 @@ const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
 
   return getLayout(
     <SessionProvider session={pageProps.session}>
+      <Notifications />
       <Component {...pageProps} />
     </SessionProvider>,
   );

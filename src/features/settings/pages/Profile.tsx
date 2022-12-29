@@ -7,6 +7,7 @@ import { trpc } from '~/utils/trpc';
 import { Form, InputField } from '~/components/Form';
 import { Button } from '~/components/Elements/Button';
 import type { AppRouter } from '~/server/routers/_app';
+import { useNotificationStore } from '~/stores';
 
 const schema = z.object({
   name: z.string().min(1, 'Required'),
@@ -30,6 +31,11 @@ export const ProfilePage: React.FC<Iprops> = ({ user }) => {
   const fixUser = trpc.user.fixById.useMutation({
     async onSuccess() {
       await utils.user.byId.invalidate();
+      useNotificationStore.getState().addNotification({
+        type: 'success',
+        title: 'fix profile sucess',
+        message: '',
+      });
     },
   });
 
@@ -53,7 +59,7 @@ export const ProfilePage: React.FC<Iprops> = ({ user }) => {
       <div className="space-y-2 md:space-y-6">
         <div className="card bg-base-200 shadow-xl">
           <div className="card-body">
-            <h1 className="md:text-3xl font-extrabold">Profile</h1>
+            <h1 className="md:text-2xl font-extrabold">Profile</h1>
           </div>
         </div>
         <div className="card bg-base-200 shadow-xl">

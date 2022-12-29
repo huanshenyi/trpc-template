@@ -44,5 +44,5 @@ const Profile: NextPageWithLayout<Iprops> = ({ user }) => {
 export default Profile;
 
 Profile.getLayout = function (page) {
-  return <Layout user={page.props.children.props.user}>{page}</Layout>;
+  return <Layout user={page.props.children[1].props?.user}>{page}</Layout>;
 };
