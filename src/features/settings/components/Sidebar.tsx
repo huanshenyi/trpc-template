@@ -2,17 +2,16 @@ import React from 'react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 
-interface Props {
-  image: string | undefined;
-  name: string | undefined;
-}
+import { useUserStore } from '~/stores';
 
-const Sidebar: React.FC<Props> = ({ image, name }) => {
+const Sidebar: React.FC = () => {
   const handelSignOut = async () => {
     await signOut({
       callbackUrl: '/login',
     });
   };
+  const { user } = useUserStore();
+
   return (
     <div className="drawer-side">
       <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
@@ -20,11 +19,11 @@ const Sidebar: React.FC<Props> = ({ image, name }) => {
         <div className="w-fit p-3 lg:m-6 bg-base-100">
           <div className="avatar w-60">
             <div className="w-16 lg:w-32 rounded-full mx-auto">
-              <img src={image} />
+              <img src={user.image || ''} />
             </div>
           </div>
 
-          <h1 className="text-2xl p-2 pl-4">{name}</h1>
+          <h1 className="text-2xl p-2 pl-4">{user.name}</h1>
           <div className="flex gap-1 justify-center pt-4">
             <a className="btn btn-sm btn-ghost btn-square">
               <svg

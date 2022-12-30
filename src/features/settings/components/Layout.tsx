@@ -4,16 +4,9 @@ import { themeChange } from 'theme-change';
 import Navbar from '~/features/settings/components/Navbar';
 import Sidebar from '~/features/settings/components/Sidebar';
 
-type User = {
-  name: string | undefined;
-  email: string | undefined;
-  image: string | undefined;
-  id: string | undefined;
-};
+type LayoutProps = { children: ReactNode };
 
-type LayoutProps = { children: ReactNode; user: User };
-
-const Layout = ({ children, user }: LayoutProps) => {
+const Layout = ({ children }: LayoutProps) => {
   useEffect(() => {
     themeChange(false);
   }, []);
@@ -27,7 +20,7 @@ const Layout = ({ children, user }: LayoutProps) => {
           <main className="flex-1 p-3 md:py-[35]">{children}</main>
         </div>
       </div>
-      <Sidebar name={user?.name} image={user?.image} />
+      <Sidebar />
     </div>
   );
 };

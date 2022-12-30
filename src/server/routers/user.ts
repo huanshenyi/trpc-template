@@ -7,6 +7,7 @@ import { prisma } from '~/server/prisma';
 const defaultUserSelect = Prisma.validator<Prisma.UserSelect>()({
   id: true,
   name: true,
+  image: true,
 });
 
 export const userRouter = router({
