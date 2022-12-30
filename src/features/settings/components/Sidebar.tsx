@@ -1,16 +1,16 @@
 import React from 'react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
-import { RouterOutput } from '~/utils/trpc';
 
-type UserByIdOutput = RouterOutput['user']['byId'];
+import { useUserStore } from '~/stores';
 
-const Sidebar: React.FC<UserByIdOutput> = ({ image, name }) => {
+const Sidebar: React.FC = () => {
   const handelSignOut = async () => {
     await signOut({
       callbackUrl: '/login',
     });
   };
+  const { user } = useUserStore();
 
   return (
     <div className="drawer-side">
@@ -19,11 +19,11 @@ const Sidebar: React.FC<UserByIdOutput> = ({ image, name }) => {
         <div className="w-fit p-3 lg:m-6 bg-base-100">
           <div className="avatar w-60">
             <div className="w-16 lg:w-32 rounded-full mx-auto">
-              <img src={image || ''} />
+              <img src={user.image || ''} />
             </div>
           </div>
 
-          <h1 className="text-2xl p-2 pl-4">{name}</h1>
+          <h1 className="text-2xl p-2 pl-4">{user.name}</h1>
           <div className="flex gap-1 justify-center pt-4">
             <a className="btn btn-sm btn-ghost btn-square">
               <svg

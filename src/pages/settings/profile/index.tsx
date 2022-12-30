@@ -1,8 +1,8 @@
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
-import { trpc } from '~/utils/trpc';
 import NextError from 'next/error';
 
+import { trpc } from '~/utils/trpc';
 import { NextPageWithLayout } from '~/pages/_app';
 import Layout from '~/features/settings/components/Layout';
 import { ProfilePage } from '~/features/settings/pages/Profile';
@@ -47,7 +47,6 @@ const Profile: NextPageWithLayout<Iprops> = ({ user }) => {
       return <>Loading...</>;
     }
     const { data } = userQuery;
-
     return (
       <>
         <ProfilePage user={data} />
@@ -61,5 +60,5 @@ const Profile: NextPageWithLayout<Iprops> = ({ user }) => {
 export default Profile;
 
 Profile.getLayout = function (page) {
-  return <Layout user={page.props.children[1].props?.user}>{page}</Layout>;
+  return <Layout>{page}</Layout>;
 };

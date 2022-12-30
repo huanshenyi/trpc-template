@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { inferProcedureInput } from '@trpc/server';
 
 import { trpc } from '~/utils/trpc';
@@ -8,6 +8,7 @@ import { Button } from '~/components/Elements/Button';
 import type { AppRouter } from '~/server/routers/_app';
 import { useNotificationStore } from '~/stores';
 import { RouterOutput } from '~/utils/trpc';
+import { useUserStore } from '~/stores';
 
 const schema = z.object({
   name: z.string().min(1, 'Required'),
@@ -24,6 +25,7 @@ interface IProps {
 }
 
 export const ProfilePage: React.FC<IProps> = ({ user }) => {
+  const { regiestUser } = useUserStore();
   const utils = trpc.useContext();
   const fixUser = trpc.user.fixById.useMutation({
     async onSuccess() {
@@ -35,6 +37,9 @@ export const ProfilePage: React.FC<IProps> = ({ user }) => {
       });
     },
   });
+  useEffect(() => {
+    regiestUser(user);
+  }, [fixUser.isSuccess, regiestUser, user]);
   return (
     <>
       <div className="space-y-2 md:space-y-6">
