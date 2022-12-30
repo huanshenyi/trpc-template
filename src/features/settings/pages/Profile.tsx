@@ -1,6 +1,5 @@
 import * as z from 'zod';
 import React from 'react';
-import NextError from 'next/error';
 import { inferProcedureInput } from '@trpc/server';
 
 import { trpc } from '~/utils/trpc';
@@ -8,6 +7,7 @@ import { Form, InputField } from '~/components/Form';
 import { Button } from '~/components/Elements/Button';
 import type { AppRouter } from '~/server/routers/_app';
 import { useNotificationStore } from '~/stores';
+import { RouterOutput } from '~/utils/trpc';
 
 const schema = z.object({
   name: z.string().min(1, 'Required'),
@@ -17,16 +17,13 @@ type createValues = {
   name: string;
 };
 
-type UserData = {
-  id: string;
-  name: string | null;
-};
+type UserByIdOutput = RouterOutput['user']['byId'];
 
-interface Iprops {
-  user: UserData | undefined;
+interface IProps {
+  user: UserByIdOutput;
 }
 
-export const ProfilePage: React.FC<Iprops> = ({ user }) => {
+export const ProfilePage: React.FC<IProps> = ({ user }) => {
   const utils = trpc.useContext();
   const fixUser = trpc.user.fixById.useMutation({
     async onSuccess() {
@@ -38,22 +35,6 @@ export const ProfilePage: React.FC<Iprops> = ({ user }) => {
       });
     },
   });
-
-  const userQuery = trpc.user.byId.useQuery({ id: user?.id as string });
-
-  if (userQuery.error) {
-    return (
-      <NextError
-        title={userQuery.error.message}
-        statusCode={userQuery.error.data?.httpStatus ?? 500}
-      />
-    );
-  }
-  if (userQuery.status !== 'success') {
-    return <>Loading...</>;
-  }
-
-  const { data } = userQuery;
   return (
     <>
       <div className="space-y-2 md:space-y-6">
@@ -79,7 +60,7 @@ export const ProfilePage: React.FC<Iprops> = ({ user }) => {
                     AppRouter['user']['fixById']
                   >;
                   const input: Input = {
-                    id: user?.id as string,
+                    id: user.id as string,
                     name: values.name,
                   };
                   try {
@@ -92,7 +73,7 @@ export const ProfilePage: React.FC<Iprops> = ({ user }) => {
                 options={{
                   shouldUnregister: true,
                   defaultValues: {
-                    name: data.name as string,
+                    name: user.name as string,
                   },
                 }}
                 className="m-auto text-center"

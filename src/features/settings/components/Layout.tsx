@@ -5,10 +5,10 @@ import Navbar from '~/features/settings/components/Navbar';
 import Sidebar from '~/features/settings/components/Sidebar';
 
 type User = {
-  name: string | undefined;
+  name: string | null;
   email: string | undefined;
-  image: string | undefined;
-  id: string | undefined;
+  image: string | null;
+  id: string;
 };
 
 type LayoutProps = { children: ReactNode; user: User };
@@ -27,7 +27,7 @@ const Layout = ({ children, user }: LayoutProps) => {
           <main className="flex-1 p-3 md:py-[35]">{children}</main>
         </div>
       </div>
-      <Sidebar name={user?.name} image={user?.image} />
+      <Sidebar name={user?.name} image={user?.image} id={user?.id} />
     </div>
   );
 };

@@ -1,18 +1,17 @@
 import React from 'react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { RouterOutput } from '~/utils/trpc';
 
-interface Props {
-  image: string | undefined;
-  name: string | undefined;
-}
+type UserByIdOutput = RouterOutput['user']['byId'];
 
-const Sidebar: React.FC<Props> = ({ image, name }) => {
+const Sidebar: React.FC<UserByIdOutput> = ({ image, name }) => {
   const handelSignOut = async () => {
     await signOut({
       callbackUrl: '/login',
     });
   };
+
   return (
     <div className="drawer-side">
       <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
@@ -20,7 +19,7 @@ const Sidebar: React.FC<Props> = ({ image, name }) => {
         <div className="w-fit p-3 lg:m-6 bg-base-100">
           <div className="avatar w-60">
             <div className="w-16 lg:w-32 rounded-full mx-auto">
-              <img src={image} />
+              <img src={image || ''} />
             </div>
           </div>
 
