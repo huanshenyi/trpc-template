@@ -99,18 +99,24 @@ export const ProfilePage: React.FC<Iprops> = ({ user }) => {
               >
                 {({ register, formState }) => (
                   <>
-                    <InputField
-                      type="text"
-                      label="name"
-                      error={formState.errors['name']}
-                      registration={register('name')}
-                      className="lg:w-3/5 m-auto"
-                    />
+                    <div className="form-control">
+                      <label className="label">
+                        <span className="label-text">Name</span>
+                      </label>
+                      <InputField
+                        type="text"
+                        label=""
+                        error={formState.errors['name']}
+                        registration={register('name')}
+                        className="lg:w-4/5"
+                      />
+                    </div>
                     <div>
                       <Button
                         isLoading={false}
                         type="submit"
-                        className="m-auto text-center lg:w-3/5 w-full flex justify-center border-indigo-600 bg-transparent dark:bg-sky-500 dark:text-white p-4 border rounded-full tracking-wide font-semibold focus:outline-none focus:shadow-outline shadow-lg cursor-pointer transition ease-in duration-300"
+                        className="flex"
+                        variant="accent"
                       >
                         Update profile
                       </Button>
