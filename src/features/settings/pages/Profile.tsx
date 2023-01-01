@@ -4,6 +4,7 @@ import { inferProcedureInput } from '@trpc/server';
 
 import { trpc } from '~/utils/trpc';
 import { Form, InputField, TextAreaField } from '~/components/Form';
+import EmailForm from '~/features/settings/components/EmailForm';
 import { Button } from '~/components/Elements/Button';
 import type { AppRouter } from '~/server/routers/_app';
 import { useNotificationStore } from '~/stores';
@@ -176,6 +177,15 @@ export const ProfilePage: React.FC<IProps> = ({ user }) => {
                 )}
               </Form>
             </div>
+            <div className="flex flex-col pt-4">
+              <div className="form-control w-52">
+                <label className="cursor-pointer label">
+                  <span className="label-text font-extrabold">アドレス</span>
+                </label>
+              </div>
+            </div>
+            <div className="divider mt-0"></div>
+            <EmailForm email={user.email} verified={user.emailVerified} />
           </div>
         </div>
       </div>
