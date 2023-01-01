@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { inferProcedureInput } from '@trpc/server';
 
 import { trpc } from '~/utils/trpc';
-import { Form, InputField } from '~/components/Form';
+import { Form, InputField, TextAreaField } from '~/components/Form';
 import { Button } from '~/components/Elements/Button';
 import type { AppRouter } from '~/server/routers/_app';
 import { useNotificationStore } from '~/stores';
@@ -12,10 +12,18 @@ import { useUserStore } from '~/stores';
 
 const schema = z.object({
   name: z.string().min(1, 'Required'),
+  bio: z.string().max(200).nullable(),
+  url: z.string().max(50).nullable(),
+  twitterUsername: z.string().max(50).nullable(),
+  location: z.string().max(50).nullable(),
 });
 
 type createValues = {
   name: string;
+  bio: string | null;
+  url: string | null;
+  twitterUsername: string | null;
+  location: string | null;
 };
 
 type UserByIdOutput = RouterOutput['user']['byId'];
@@ -67,6 +75,10 @@ export const ProfilePage: React.FC<IProps> = ({ user }) => {
                   const input: Input = {
                     id: user.id as string,
                     name: values.name,
+                    bio: values.bio,
+                    url: values.url,
+                    twitterUsername: values.twitterUsername,
+                    location: values.location,
                   };
                   try {
                     await fixUser.mutateAsync(input);
@@ -79,6 +91,10 @@ export const ProfilePage: React.FC<IProps> = ({ user }) => {
                   shouldUnregister: true,
                   defaultValues: {
                     name: user.name as string,
+                    bio: user.bio,
+                    url: user.url,
+                    twitterUsername: user.url,
+                    location: user.url,
                   },
                 }}
                 className="m-auto text-center"
@@ -87,13 +103,62 @@ export const ProfilePage: React.FC<IProps> = ({ user }) => {
                   <>
                     <div className="form-control">
                       <label className="label">
-                        <span className="label-text">Name</span>
+                        <span className="label-text font-bold">Name</span>
                       </label>
                       <InputField
                         type="text"
                         label=""
                         error={formState.errors['name']}
                         registration={register('name')}
+                        className="lg:w-4/5"
+                      />
+                    </div>
+                    <div className="form-control">
+                      <label className="label">
+                        <span className="label-text font-bold">Bio</span>
+                      </label>
+                      <TextAreaField
+                        label=""
+                        error={formState.errors['bio']}
+                        registration={register('bio')}
+                        className="lg:w-4/5"
+                      />
+                    </div>
+                    <div className="form-control">
+                      <label className="label">
+                        <span className="label-text font-bold">URL</span>
+                      </label>
+                      <InputField
+                        type="text"
+                        label=""
+                        error={formState.errors['url']}
+                        registration={register('url')}
+                        className="lg:w-4/5"
+                      />
+                    </div>
+                    <div className="form-control">
+                      <label className="label">
+                        <span className="label-text font-bold">
+                          Twitter username
+                        </span>
+                      </label>
+                      <InputField
+                        type="text"
+                        label=""
+                        error={formState.errors['twitterUsername']}
+                        registration={register('twitterUsername')}
+                        className="lg:w-4/5"
+                      />
+                    </div>
+                    <div className="form-control">
+                      <label className="label">
+                        <span className="label-text font-bold">Location</span>
+                      </label>
+                      <InputField
+                        type="text"
+                        label=""
+                        error={formState.errors['location']}
+                        registration={register('location')}
                         className="lg:w-4/5"
                       />
                     </div>
