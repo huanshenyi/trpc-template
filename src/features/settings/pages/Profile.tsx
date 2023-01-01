@@ -93,8 +93,8 @@ export const ProfilePage: React.FC<IProps> = ({ user }) => {
                     name: user.name as string,
                     bio: user.bio,
                     url: user.url,
-                    twitterUsername: user.url,
-                    location: user.url,
+                    twitterUsername: user.twitterUsername,
+                    location: user.location,
                   },
                 }}
                 className="m-auto text-center"
