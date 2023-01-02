@@ -7,6 +7,8 @@ import { prisma } from '~/server/prisma';
 const defaultUserSelect = Prisma.validator<Prisma.UserSelect>()({
   id: true,
   name: true,
+  email: true,
+  emailVerified: true,
   image: true,
   bio: true,
   url: true,
@@ -60,5 +62,23 @@ export const userRouter = router({
         });
       }
       return user;
+    }),
+  verificationEmail: publicProcedure
+    .input(
+      z.object({
+        email: z.string(),
+        emailVerified: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const updateVerificationEmail = await prisma.user.update({
+        where: {
+          email: input.email,
+        },
+        data: {
+          emailVerified: input.emailVerified,
+        },
+      });
+      return updateVerificationEmail;
     }),
 });
