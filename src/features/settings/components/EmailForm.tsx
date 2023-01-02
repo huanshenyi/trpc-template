@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { supabase } from '~/server/supabaseClient';
 
 interface Iprops {
   email: string | null;
@@ -6,8 +7,22 @@ interface Iprops {
 }
 
 const EmailForm: React.FC<Iprops> = ({ email, verified }) => {
-  const handleClickVerified = () => {
-    console.log('');
+  const date = new Date();
+  const [statusMsg, setStatusMsg] = useState<string>('認証する');
+  const handleClickVerified = async () => {
+    if (email) {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${
+            process.env.NEXT_PUBLIC_BASE_URL
+          }/verification/${email}?code=${date.getTime()}`,
+        },
+      });
+      if (!error) {
+        setStatusMsg('確認用メール送信されました。');
+      }
+    }
   };
   return (
     <div className="form-control w-full max-w-xl">
@@ -18,10 +33,10 @@ const EmailForm: React.FC<Iprops> = ({ email, verified }) => {
           className="input input-bordered w-full"
         />
         {verified ? (
-          <span>任書済み</span>
+          <span className="w-28">認証済み</span>
         ) : (
-          <label className="btn" onClick={handleClickVerified}>
-            認証する
+          <label className="btn w-28" onClick={handleClickVerified}>
+            {statusMsg}
           </label>
         )}
       </label>
