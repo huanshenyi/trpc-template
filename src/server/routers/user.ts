@@ -81,4 +81,40 @@ export const userRouter = router({
       });
       return updateVerificationEmail;
     }),
+  add: publicProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        email: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const user = await prisma.user.create({
+        data: input,
+        select: defaultUserSelect,
+      });
+      return user;
+    }),
+  delete: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const { id } = input;
+      const user = await prisma.user.delete({
+        where: {
+          id: id,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: `No user with id '${id}'`,
+        });
+      }
+      return user;
+    }),
 });
