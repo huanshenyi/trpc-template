@@ -24,7 +24,11 @@ export const AuthLoginBtn = () => {
         </svg>
         Sign in with Github
       </Button>
-      <Button className="px-4 py-2 gap-2 mb-2 w-full" variant="warning">
+      <Button
+        className="px-4 py-2 gap-2 mb-2 w-full"
+        variant="warning"
+        onClick={() => signIn('google')}
+      >
         <svg className="svg-icon h-6 w-6" viewBox="0 0 20 20">
           <path
             strokeLinecap="round"
