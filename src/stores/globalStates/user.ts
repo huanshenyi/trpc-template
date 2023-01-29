@@ -4,6 +4,10 @@ export type User = {
   id: string;
   name: string | null;
   image: string | null;
+  githubUsername: string | null;
+  twitterUsername: string | null;
+  githubIsPublic: boolean;
+  twitterIsPublic: boolean;
 };
 
 type UserStore = {
@@ -12,7 +16,15 @@ type UserStore = {
 };
 
 export const useUserStore = create<UserStore>((set) => ({
-  user: { id: '', name: '', image: '' },
+  user: {
+    id: '',
+    name: '',
+    image: '',
+    githubUsername: '',
+    twitterUsername: '',
+    githubIsPublic: false,
+    twitterIsPublic: false,
+  },
   regiestUser: (user) =>
     set(() => ({
       user: { ...user },

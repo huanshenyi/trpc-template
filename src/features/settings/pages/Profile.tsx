@@ -17,6 +17,7 @@ const schema = z.object({
   url: z.string().max(50).nullable(),
   twitterUsername: z.string().max(50).nullable(),
   location: z.string().max(50).nullable(),
+  githubUsername: z.string().max(50).nullable(),
 });
 
 type createValues = {
@@ -25,6 +26,9 @@ type createValues = {
   url: string | null;
   twitterUsername: string | null;
   location: string | null;
+  githubUsername: string | null;
+  twitterIsPublic: boolean;
+  githubIsPublic: boolean;
 };
 
 type UserByIdOutput = RouterOutput['user']['byId'];
@@ -80,6 +84,9 @@ export const ProfilePage: React.FC<IProps> = ({ user }) => {
                     url: values.url,
                     twitterUsername: values.twitterUsername,
                     location: values.location,
+                    githubUsername: values.githubUsername,
+                    githubIsPublic: user.githubIsPublic,
+                    twitterIsPublic: user.twitterIsPublic,
                   };
                   try {
                     await fixUser.mutateAsync(input);
@@ -96,6 +103,7 @@ export const ProfilePage: React.FC<IProps> = ({ user }) => {
                     url: user.url,
                     twitterUsername: user.twitterUsername,
                     location: user.location,
+                    githubUsername: user.githubUsername,
                   },
                 }}
                 className="m-auto text-center"
@@ -146,8 +154,24 @@ export const ProfilePage: React.FC<IProps> = ({ user }) => {
                       <InputField
                         type="text"
                         label=""
+                        placeholder="https://twitter.com/[Twitter username]"
                         error={formState.errors['twitterUsername']}
                         registration={register('twitterUsername')}
+                        className="lg:w-4/5"
+                      />
+                    </div>
+                    <div className="form-control">
+                      <label className="label">
+                        <span className="label-text font-bold">
+                          Github username
+                        </span>
+                      </label>
+                      <InputField
+                        type="text"
+                        label=""
+                        placeholder="https://github.com/[Github username]"
+                        error={formState.errors['githubUsername']}
+                        registration={register('githubUsername')}
                         className="lg:w-4/5"
                       />
                     </div>
@@ -163,16 +187,14 @@ export const ProfilePage: React.FC<IProps> = ({ user }) => {
                         className="lg:w-4/5"
                       />
                     </div>
-                    <div>
-                      <Button
-                        isLoading={false}
-                        type="submit"
-                        className="flex"
-                        variant="accent"
-                      >
-                        Update profile
-                      </Button>
-                    </div>
+                    <Button
+                      isLoading={false}
+                      type="submit"
+                      className="flex"
+                      variant="accent"
+                    >
+                      Update profile
+                    </Button>
                   </>
                 )}
               </Form>
