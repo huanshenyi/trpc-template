@@ -14,6 +14,9 @@ const defaultUserSelect = Prisma.validator<Prisma.UserSelect>()({
   url: true,
   twitterUsername: true,
   location: true,
+  githubUsername: true,
+  twitterIsPublic: true,
+  githubIsPublic: true,
 });
 
 export const userRouter = router({
@@ -26,6 +29,9 @@ export const userRouter = router({
         url: z.string().max(50).nullable(),
         twitterUsername: z.string().max(50).nullable(),
         location: z.string().max(50).nullable(),
+        githubUsername: z.string().max(50).nullable(),
+        twitterIsPublic: z.boolean(),
+        githubIsPublic: z.boolean(),
       }),
     )
     .mutation(async ({ input }) => {
@@ -39,6 +45,9 @@ export const userRouter = router({
           url: input.url,
           twitterUsername: input.twitterUsername,
           location: input.location,
+          githubUsername: input.githubUsername,
+          githubIsPublic: input.githubIsPublic as boolean,
+          twitterIsPublic: input.twitterIsPublic as boolean,
         },
       });
       return updateUser;
