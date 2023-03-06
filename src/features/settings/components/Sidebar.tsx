@@ -99,7 +99,7 @@ const Sidebar: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <a>
+                <Link href="/settings/schedule">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5"
@@ -115,7 +115,7 @@ const Sidebar: React.FC = () => {
                     ></path>
                   </svg>
                   Schedule
-                </a>
+                </Link>
               </li>
               <li>
                 <Link href="/settings/account">
