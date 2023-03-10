@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import jaLocale from '@fullcalendar/core/locales/ja';
@@ -7,6 +7,7 @@ import interactionPlugin, {
   EventDragStartArg,
 } from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import CreateScheduleModal from '~/features/settings/components/CreateScheduleModal';
 
 type IProps = {
   handelSetSelectedDate?: (arg: DateClickArg) => void;
@@ -14,13 +15,25 @@ type IProps = {
 };
 
 export const SchedulePage: React.FC<IProps> = () => {
+  const [formOpen, setFormOpen] = useState(false);
+  const [formText, setFormText] = useState('');
+  const [createDate, setCreateDate] = useState<DateClickArg>();
   const handleDateClick = useCallback((arg: DateClickArg) => {
     console.log(arg);
+    setFormText('スケジュール追加');
+    setCreateDate(arg);
+    setFormOpen(true);
   }, []);
 
   const handleEventClick = useCallback((arg: EventDragStartArg) => {
+    setFormText('スケジュール修正');
+    setFormOpen(true);
     console.log(arg);
   }, []);
+
+  const closeFormModel = () => {
+    setFormOpen(!formOpen);
+  };
   return (
     <>
       <div className="space-y-2 md:space-y-6">
@@ -69,6 +82,12 @@ export const SchedulePage: React.FC<IProps> = () => {
           </div>
         </div>
       </div>
+      <CreateScheduleModal
+        formTitle={formText}
+        formOpen={formOpen}
+        selectedDate={createDate}
+        handelOpenModal={closeFormModel}
+      />
     </>
   );
 };
