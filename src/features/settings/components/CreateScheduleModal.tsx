@@ -16,6 +16,11 @@ import {
   getAfterHalfHour,
   formatISOTime,
 } from '~/utils/format';
+import { inferProcedureInput } from '@trpc/server';
+import type { AppRouter } from '~/server/routers/_app';
+import { useUserStore } from '~/stores';
+import { trpc } from '~/utils/trpc';
+import { useNotificationStore } from '~/stores';
 
 interface Iprops {
   formTitle: string;
@@ -47,11 +52,25 @@ const CreateScheduleModal: NextPage<Iprops> = ({
   handelOpenModal,
 }) => {
   const [slectedDay, setSlectedDay] = useState<string>();
+  const utils = trpc.useContext();
   useEffect(() => {
     if (selectedDate) {
       setSlectedDay(formatDay(selectedDate.dateStr));
     }
   }, [selectedDate]);
+
+  const { user } = useUserStore();
+  const addSchedule = trpc.schedule.add.useMutation({
+    async onSuccess() {
+      utils.schedule.list.invalidate();
+      useNotificationStore.getState().addNotification({
+        type: 'success',
+        title: 'add schedule sucess',
+        message: '',
+      });
+      handelOpenModal();
+    },
+  });
 
   return (
     <Modal
@@ -63,9 +82,20 @@ const CreateScheduleModal: NextPage<Iprops> = ({
         onSubmit={async (values) => {
           values.start = formatISOTime(slectedDay + ' ' + values.start);
           values.end = formatISOTime(slectedDay + ' ' + values.end);
-          // console.log(values);
-
-          console.log(values);
+          type Input = inferProcedureInput<AppRouter['schedule']['add']>;
+          const input: Input = {
+            title: values.title,
+            content: values.content,
+            start: values.start,
+            end: values.end,
+            isPublic: values.isPublic,
+            userId: user.id,
+          };
+          try {
+            await addSchedule.mutateAsync(input);
+          } catch (cause) {
+            console.error({ cause }, 'Failed to add schedule');
+          }
         }}
         schema={schema}
         options={{
