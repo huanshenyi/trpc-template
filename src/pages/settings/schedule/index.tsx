@@ -34,8 +34,9 @@ interface Iprops {
 
 const Profile: NextPageWithLayout<Iprops> = ({ user }) => {
   if (user) {
-    // Todo: get schedule
-    const userQuery = trpc.user.byId.useQuery({ id: user.id as string });
+    const userQuery = trpc.schedule.list.useQuery({
+      userId: user.id as string,
+    });
     if (userQuery.error) {
       return (
         <NextError
@@ -50,8 +51,7 @@ const Profile: NextPageWithLayout<Iprops> = ({ user }) => {
     const { data } = userQuery;
     return (
       <>
-        {/* <ProfilePage user={data} /> */}
-        <SchedulePage />
+        <SchedulePage mySchedule={data} />
       </>
     );
   } else {

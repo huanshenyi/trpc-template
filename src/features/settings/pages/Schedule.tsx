@@ -8,18 +8,21 @@ import interactionPlugin, {
 } from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import CreateScheduleModal from '~/features/settings/components/CreateScheduleModal';
+import { RouterOutput } from '~/utils/trpc';
+
+type ScheduleListOutput = RouterOutput['schedule']['list'];
 
 type IProps = {
+  mySchedule: ScheduleListOutput;
   handelSetSelectedDate?: (arg: DateClickArg) => void;
   handelSetSelectedEvent?: (arg: EventDragStartArg) => void;
 };
 
-export const SchedulePage: React.FC<IProps> = () => {
+export const SchedulePage: React.FC<IProps> = ({ mySchedule }) => {
   const [formOpen, setFormOpen] = useState(false);
   const [formText, setFormText] = useState('');
   const [createDate, setCreateDate] = useState<DateClickArg>();
   const handleDateClick = useCallback((arg: DateClickArg) => {
-    console.log(arg);
     setFormText('スケジュール追加');
     setCreateDate(arg);
     setFormOpen(true);
@@ -48,7 +51,7 @@ export const SchedulePage: React.FC<IProps> = () => {
               initialView="dayGridMonth"
               plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
               locale={jaLocale}
-              initialEvents={[{ title: 'initial event', start: new Date() }]}
+              eventSources={[mySchedule.items]}
               headerToolbar={{
                 left: 'prev,next today',
                 center: 'title',
