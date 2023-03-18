@@ -3,3 +3,4 @@ export * from './Navbar';
 export * from './Sidebar';
 export * from './EmailForm';
 export * from './CreateScheduleModal';
+export * from './EditScheduleModal';

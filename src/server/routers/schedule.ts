@@ -2,6 +2,7 @@ import { router, publicProcedure } from '../trpc';
 import { Prisma } from '@prisma/client';
 import { z } from 'zod';
 import { prisma } from '~/server/prisma';
+import { TRPCError } from '@trpc/server';
 
 const defaultSchedeleSelect = Prisma.validator<Prisma.ScheduleSelect>()({
   id: true,
@@ -53,5 +54,51 @@ export const schedeleRouter = router({
         select: defaultSchedeleSelect,
       });
       return schedule;
+    }),
+  byId: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .query(async ({ input }) => {
+      const { id } = input;
+      const post = await prisma.schedule.findUnique({
+        where: { id },
+        select: defaultSchedeleSelect,
+      });
+      if (!post) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: `No post with id '${id}'`,
+        });
+      }
+      return post;
+    }),
+  fixById: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        content: z.string().nullable(),
+        start: z.string(),
+        end: z.string(),
+        isPublic: z.boolean(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const updateSchedule = await prisma.schedule.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          title: input.title,
+          content: input.content,
+          start: input.start,
+          end: input.end,
+          isPublic: input.isPublic,
+        },
+      });
+      return updateSchedule;
     }),
 });
