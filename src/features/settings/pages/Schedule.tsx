@@ -8,6 +8,7 @@ import interactionPlugin, {
 } from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import CreateScheduleModal from '~/features/settings/components/CreateScheduleModal';
+import EditScheduleModal from '~/features/settings/components/EditScheduleModal';
 import { RouterOutput } from '~/utils/trpc';
 
 type ScheduleListOutput = RouterOutput['schedule']['list'];
@@ -20,22 +21,26 @@ type IProps = {
 
 export const SchedulePage: React.FC<IProps> = ({ mySchedule }) => {
   const [formOpen, setFormOpen] = useState(false);
-  const [formText, setFormText] = useState('');
+  const [editFormOpen, setEditFormOpen] = useState(false);
   const [createDate, setCreateDate] = useState<DateClickArg>();
+  const [editDate, setEditDate] = useState<EventDragStartArg>();
   const handleDateClick = useCallback((arg: DateClickArg) => {
-    setFormText('スケジュール追加');
     setCreateDate(arg);
     setFormOpen(true);
   }, []);
 
   const handleEventClick = useCallback((arg: EventDragStartArg) => {
-    setFormText('スケジュール修正');
-    setFormOpen(true);
-    console.log(arg);
+    setEditDate(arg);
+    setEditFormOpen(true);
   }, []);
 
   const closeFormModel = () => {
     setFormOpen(!formOpen);
+    setEditFormOpen(false);
+  };
+  const closeEditFormModel = () => {
+    setEditFormOpen(!editFormOpen);
+    setFormOpen(false);
   };
   return (
     <>
@@ -86,10 +91,16 @@ export const SchedulePage: React.FC<IProps> = ({ mySchedule }) => {
         </div>
       </div>
       <CreateScheduleModal
-        formTitle={formText}
+        formTitle="スケジュール追加"
         formOpen={formOpen}
         selectedDate={createDate}
         handelOpenModal={closeFormModel}
+      />
+      <EditScheduleModal
+        formTitle="スケジュール修正"
+        eventData={editDate}
+        formOpen={editFormOpen}
+        handelOpenModal={closeEditFormModel}
       />
     </>
   );
