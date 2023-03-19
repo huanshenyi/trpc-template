@@ -18,9 +18,9 @@ import {
 } from '~/utils/format';
 import { inferProcedureInput } from '@trpc/server';
 import type { AppRouter } from '~/server/routers/_app';
-import { useUserStore } from '~/stores';
 import { trpc } from '~/utils/trpc';
 import { useNotificationStore } from '~/stores';
+import { useSession } from 'next-auth/react';
 
 interface Iprops {
   formTitle: string;
@@ -53,13 +53,13 @@ const CreateScheduleModal: NextPage<Iprops> = ({
 }) => {
   const [slectedDay, setSlectedDay] = useState<string>();
   const utils = trpc.useContext();
+  const { data } = useSession();
   useEffect(() => {
     if (selectedDate) {
       setSlectedDay(formatDay(selectedDate.dateStr));
     }
   }, [selectedDate]);
 
-  const { user } = useUserStore();
   const addSchedule = trpc.schedule.add.useMutation({
     async onSuccess() {
       utils.schedule.list.invalidate();
@@ -89,7 +89,7 @@ const CreateScheduleModal: NextPage<Iprops> = ({
             start: values.start,
             end: values.end,
             isPublic: values.isPublic,
-            userId: user.id,
+            userId: data?.user.id as string,
           };
           try {
             await addSchedule.mutateAsync(input);
