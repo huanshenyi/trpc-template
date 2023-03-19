@@ -101,4 +101,23 @@ export const schedeleRouter = router({
       });
       return updateSchedule;
     }),
+  deleteById: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const { id } = input;
+      const schedule = await prisma.schedule.delete({
+        where: { id },
+      });
+      if (!schedule) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: `No delete with id '${id}'`,
+        });
+      }
+      return schedule;
+    }),
 });

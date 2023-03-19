@@ -57,6 +57,28 @@ const EditScheduleModal: NextPage<Iprops> = ({
     },
   });
 
+  const deleteSchedule = trpc.schedule.deleteById.useMutation({
+    async onSuccess() {
+      utils.schedule.list.invalidate();
+      useNotificationStore.getState().addNotification({
+        type: 'success',
+        title: 'delete schedule sucess',
+        message: '',
+      });
+      handelOpenModal();
+    },
+  });
+
+  const handelDeltetSchedule = async () => {
+    type Input = inferProcedureInput<AppRouter['schedule']['deleteById']>;
+    const input: Input = { id: eventData?.event.id as string };
+    try {
+      await deleteSchedule.mutateAsync(input);
+    } catch (cause) {
+      console.error({ cause }, 'Failed to delete schedule');
+    }
+  };
+
   return (
     <Modal
       title={formTitle}
@@ -135,13 +157,22 @@ const EditScheduleModal: NextPage<Iprops> = ({
               registration={register('isPublic')}
               className="m-auto"
             />
-            <div>
+            <div className="flex justify-between mx-12">
               <Button
                 variant="primary"
                 type="submit"
-                className="m-auto text-center lg:w-3/5 w-full flex justify-center border-indigo-600 bg-transparent dark:bg-sky-500 dark:text-white p-4 border rounded-full tracking-wide font-semibold focus:outline-none focus:shadow-outline shadow-lg cursor-pointer transition ease-in duration-300"
+                className="border rounded-full"
+                size="md"
               >
                 スケジュール変更
+              </Button>
+              <Button
+                variant="error"
+                className="border rounded-full"
+                size="md"
+                onClick={handelDeltetSchedule}
+              >
+                スケジュール削除
               </Button>
             </div>
           </>
