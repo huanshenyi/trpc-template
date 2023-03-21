@@ -157,7 +157,7 @@ const EditScheduleModal: NextPage<Iprops> = ({
               registration={register('isPublic')}
               className="m-auto"
             />
-            <div className="flex justify-between mx-12">
+            <div className="flex justify-between">
               <Button
                 variant="primary"
                 type="submit"
