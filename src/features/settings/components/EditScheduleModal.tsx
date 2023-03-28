@@ -101,7 +101,7 @@ const EditScheduleModal: NextPage<Iprops> = ({
             content: values.content,
             start: values.start,
             end: values.end,
-            isPublic: values.isPublic,
+            isPublic: true,
             id: eventData?.event.id as string,
           };
           try {
@@ -158,6 +158,8 @@ const EditScheduleModal: NextPage<Iprops> = ({
               error={formState.errors['isPublic']}
               registration={register('isPublic')}
               className="m-auto"
+              disabled={true}
+              checked={eventData?.event.extendedProps.isPublic}
             />
             <div className="flex justify-between">
               <Button
