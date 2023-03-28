@@ -11,6 +11,7 @@ const defaultSchedeleSelect = Prisma.validator<Prisma.ScheduleSelect>()({
   start: true,
   end: true,
   isPublic: true,
+  user: true,
 });
 
 export const schedeleRouter = router({
@@ -26,7 +27,14 @@ export const schedeleRouter = router({
       const items = await prisma.schedule.findMany({
         select: defaultSchedeleSelect,
         where: {
-          userId: userId,
+          OR: [
+            {
+              userId: userId,
+            },
+            {
+              isPublic: true,
+            },
+          ],
         },
         orderBy: {
           createdAt: 'desc',

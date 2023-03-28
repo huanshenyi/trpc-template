@@ -51,7 +51,7 @@ const Profile: NextPageWithLayout<Iprops> = ({ user }) => {
     const { data } = userQuery;
     return (
       <>
-        <SchedulePage mySchedule={data} />
+        <SchedulePage scheduleList={data} />
       </>
     );
   } else {
