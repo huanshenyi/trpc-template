@@ -2,6 +2,7 @@ import * as z from 'zod';
 import type { NextPage } from 'next';
 import { EventDragStartArg } from '@fullcalendar/interaction';
 import { inferProcedureInput } from '@trpc/server';
+import { useSession } from 'next-auth/react';
 import { Button } from '~/components/Elements';
 import {
   Form,
@@ -45,6 +46,7 @@ const EditScheduleModal: NextPage<Iprops> = ({
   handelOpenModal,
 }) => {
   const utils = trpc.useContext();
+  const { data } = useSession();
   const fixSchedule = trpc.schedule.fixById.useMutation({
     async onSuccess() {
       utils.schedule.list.invalidate();
@@ -99,7 +101,7 @@ const EditScheduleModal: NextPage<Iprops> = ({
             content: values.content,
             start: values.start,
             end: values.end,
-            isPublic: values.isPublic,
+            isPublic: true,
             id: eventData?.event.id as string,
           };
           try {
@@ -156,6 +158,8 @@ const EditScheduleModal: NextPage<Iprops> = ({
               error={formState.errors['isPublic']}
               registration={register('isPublic')}
               className="m-auto"
+              disabled={true}
+              checked={eventData?.event.extendedProps.isPublic}
             />
             <div className="flex justify-between">
               <Button
@@ -163,6 +167,9 @@ const EditScheduleModal: NextPage<Iprops> = ({
                 type="submit"
                 className="border rounded-full"
                 size="md"
+                disabled={
+                  eventData?.event.extendedProps.user.id !== data?.user.id
+                }
               >
                 スケジュール変更
               </Button>
@@ -171,6 +178,9 @@ const EditScheduleModal: NextPage<Iprops> = ({
                 className="border rounded-full"
                 size="md"
                 onClick={handelDeltetSchedule}
+                disabled={
+                  eventData?.event.extendedProps.user.id !== data?.user.id
+                }
               >
                 スケジュール削除
               </Button>

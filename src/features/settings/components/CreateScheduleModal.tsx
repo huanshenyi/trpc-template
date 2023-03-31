@@ -88,7 +88,7 @@ const CreateScheduleModal: NextPage<Iprops> = ({
             content: values.content,
             start: values.start,
             end: values.end,
-            isPublic: values.isPublic,
+            isPublic: true,
             userId: data?.user.id as string,
           };
           try {
@@ -143,6 +143,8 @@ const CreateScheduleModal: NextPage<Iprops> = ({
               error={formState.errors['isPublic']}
               registration={register('isPublic')}
               className="m-auto"
+              disabled={true}
+              checked={true}
             />
             <div>
               <Button

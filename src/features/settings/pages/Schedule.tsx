@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import jaLocale from '@fullcalendar/core/locales/ja';
+import { useSession } from 'next-auth/react';
 import interactionPlugin, {
   DateClickArg,
   EventDragStartArg,
@@ -12,18 +13,44 @@ import EditScheduleModal from '~/features/settings/components/EditScheduleModal'
 import { RouterOutput } from '~/utils/trpc';
 
 type ScheduleListOutput = RouterOutput['schedule']['list'];
+type ScheduleItemType = RouterOutput['schedule']['list']['items'][0];
+type ScheduleType = ScheduleItemType & { backgroundColor: string };
 
 type IProps = {
-  mySchedule: ScheduleListOutput;
+  scheduleList: ScheduleListOutput;
   handelSetSelectedDate?: (arg: DateClickArg) => void;
   handelSetSelectedEvent?: (arg: EventDragStartArg) => void;
 };
 
-export const SchedulePage: React.FC<IProps> = ({ mySchedule }) => {
+export const SchedulePage: React.FC<IProps> = ({ scheduleList }) => {
+  const { data } = useSession();
   const [formOpen, setFormOpen] = useState(false);
   const [editFormOpen, setEditFormOpen] = useState(false);
   const [createDate, setCreateDate] = useState<DateClickArg>();
   const [editDate, setEditDate] = useState<EventDragStartArg>();
+  const [isAll, setIsAll] = useState<boolean>(true);
+  const [showSchedule, setShowSchedule] = useState<ScheduleType[]>([]);
+
+  useEffect(() => {
+    if (!isAll) {
+      setShowSchedule(
+        showSchedule.filter((item) => {
+          return item.user.id === data?.user.id;
+        }),
+      );
+    } else {
+      const sl: ScheduleType[] = [];
+      scheduleList.items.forEach((item) => {
+        if (item.user.id !== data?.user.id) {
+          sl.push({ backgroundColor: '#36D339', ...item });
+        } else {
+          sl.push({ backgroundColor: '', ...item });
+        }
+      });
+      setShowSchedule(sl);
+    }
+  }, [isAll, data?.user.id, scheduleList.items]);
+
   const handleDateClick = useCallback((arg: DateClickArg) => {
     setCreateDate(arg);
     setFormOpen(true);
@@ -42,6 +69,10 @@ export const SchedulePage: React.FC<IProps> = ({ mySchedule }) => {
     setEditFormOpen(!editFormOpen);
     setFormOpen(false);
   };
+  const checkedIsAll = () => {
+    setIsAll(!isAll);
+  };
+
   return (
     <>
       <div className="space-y-2 md:space-y-6">
@@ -52,11 +83,22 @@ export const SchedulePage: React.FC<IProps> = ({ mySchedule }) => {
         </div>
         <div className="card bg-base-200 shadow-xl">
           <div className="card-body">
+            <div className="form-control">
+              <label className="cursor-pointer label">
+                <span className="label-text">他人の予定を見る</span>
+                <input
+                  type="checkbox"
+                  checked={isAll}
+                  className="checkbox checkbox-primary"
+                  onChange={checkedIsAll}
+                />
+              </label>
+            </div>
             <FullCalendar
               initialView="dayGridMonth"
               plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
               locale={jaLocale}
-              eventSources={[mySchedule.items]}
+              eventSources={[showSchedule]}
               headerToolbar={{
                 left: 'prev,next today',
                 center: 'title',
