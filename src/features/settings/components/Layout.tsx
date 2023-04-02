@@ -1,8 +1,15 @@
 import { ReactNode, useEffect } from 'react';
 import { themeChange } from 'theme-change';
+import dynamic from 'next/dynamic';
 
 import Navbar from '~/features/settings/components/Navbar';
-import Sidebar from '~/features/settings/components/Sidebar';
+
+const Sidebar = dynamic(
+  () => import('~/features/settings/components/Sidebar'),
+  {
+    ssr: false,
+  },
+);
 
 type LayoutProps = { children: ReactNode };
 

@@ -1,4 +1,5 @@
 import create from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export type User = {
   id: string;
@@ -15,18 +16,20 @@ type UserStore = {
   regiestUser: (user: User) => void;
 };
 
-export const useUserStore = create<UserStore>((set) => ({
-  user: {
-    id: '',
-    name: '',
-    image: '',
-    githubUsername: '',
-    twitterUsername: '',
-    githubIsPublic: false,
-    twitterIsPublic: false,
-  },
-  regiestUser: (user) =>
-    set(() => ({
-      user: { ...user },
-    })),
-}));
+export const useUserStore = create<UserStore>()(
+  persist((set) => ({
+    user: {
+      id: '',
+      name: '',
+      image: '',
+      githubUsername: '',
+      twitterUsername: '',
+      githubIsPublic: false,
+      twitterIsPublic: false,
+    },
+    regiestUser: (user) =>
+      set(() => ({
+        user: { ...user },
+      })),
+  })),
+);
