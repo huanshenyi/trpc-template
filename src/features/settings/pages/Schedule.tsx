@@ -78,7 +78,7 @@ export const SchedulePage: React.FC<IProps> = ({ scheduleList }) => {
       <div className="space-y-2 md:space-y-6">
         <div className="card bg-base-200 shadow-xl">
           <div className="card-body">
-            <h1 className="md:text-2xl font-extrabold">Schedule</h1>
+            <h1 className="md:text-2xl font-extrabold">CHIBA BASE Schedule</h1>
           </div>
         </div>
         <div className="card bg-base-200 shadow-xl">
