@@ -125,6 +125,19 @@ const EditScheduleModal: NextPage<Iprops> = ({
       >
         {({ register, formState }) => (
           <>
+            {eventData?.event.extendedProps.user.id !== data?.user.id ? (
+              <div>
+                <div className="avatar">
+                  <div className="w-16 rounded-full">
+                    <img
+                      src={eventData?.event.extendedProps.user.image}
+                      alt="icon"
+                    />
+                  </div>
+                </div>
+                <div>Auth: {eventData?.event.extendedProps.user.name}</div>
+              </div>
+            ) : null}
             <InputField
               type="text"
               label="タイトルを追加"
