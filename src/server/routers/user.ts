@@ -17,6 +17,7 @@ const defaultUserSelect = Prisma.validator<Prisma.UserSelect>()({
   githubUsername: true,
   twitterIsPublic: true,
   githubIsPublic: true,
+  isAdmin: true,
 });
 
 export const userRouter = router({

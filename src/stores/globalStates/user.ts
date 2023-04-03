@@ -8,6 +8,7 @@ export type User = {
   twitterUsername: string | null;
   githubIsPublic: boolean;
   twitterIsPublic: boolean;
+  isAdmin: boolean;
 };
 
 type UserStore = {
@@ -24,6 +25,7 @@ export const useUserStore = create<UserStore>((set) => ({
     twitterUsername: '',
     githubIsPublic: false,
     twitterIsPublic: false,
+    isAdmin: false,
   },
   regiestUser: (user) =>
     set(() => ({
