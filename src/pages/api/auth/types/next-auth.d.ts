@@ -1,4 +1,4 @@
-import { DefaultSession } from 'next-auth';
+import { DefaultSession, DefaultUser } from 'next-auth';
 
 declare module 'next-auth' {
   /**
@@ -8,6 +8,12 @@ declare module 'next-auth' {
     user: {
       /** The user's postal address. */
       id: string;
+      isAdmin?: boolean | null;
     } & DefaultSession['user'];
+  }
+
+  interface User extends DefaultUser {
+    id: string;
+    isAdmin?: boolean | null;
   }
 }

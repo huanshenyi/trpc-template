@@ -19,6 +19,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
+  if (!session.user.isAdmin) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/',
+      },
+    };
+  }
+
   return { props: { user: session.user } };
 };
 

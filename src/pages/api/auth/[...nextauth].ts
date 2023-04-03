@@ -27,6 +27,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, user }) {
       session.user.id = user.id;
+      session.user.isAdmin = user.isAdmin;
       return session;
     },
   },

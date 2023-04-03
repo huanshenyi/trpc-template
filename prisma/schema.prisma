@@ -65,6 +65,7 @@ model User {
   githubUsername String? @map("gethub_username")
   twitterIsPublic Boolean @map("twitter_is_public") @default(false)
   githubIsPublic Boolean @map("github_is_public") @default(false)
+  isAdmin Boolean @map("is_admin") @default(false)
   accounts Account[]
   sessions Session[]
   schedules Schedule[]
